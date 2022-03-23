@@ -12,8 +12,7 @@
    :db {:connection-uri "jdbc:h2:./demo"}})
 
 (def ^:private db-spec
-  {:classname "com.p6spy.engine.spy.P6SpyDriver"
-   :jdbcUrl     "jdbc:p6spy:h2:./demo"})
+  {:jdbcUrl     "jdbc:p6spy:h2:./demo"})
 
 (defn each-test-fixtures [f]
   (migratus/migrate migrate-config)

@@ -7,7 +7,7 @@
    [next.jdbc.result-set :as rs]
    [redsql.test-fixtures :as fixtures]))
 
-(use-fixtures :once fixtures/each-test-fixtures)
+(use-fixtures :each fixtures/each-test-fixtures)
 
 (def logic-delete-opt
   {:logic-delete? true
@@ -357,5 +357,5 @@
                      :where [:= :id "2"]}
                     {:builder-fn rs/as-unqualified-lower-maps}))]
         (is (not (nil? user)))
-        (is (false? (:delete_flag user))))))
+        (is (true? (:delete_flag user))))))
   )

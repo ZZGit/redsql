@@ -15,3 +15,10 @@ jobs:
       run: lein deps
     - name: Run tests
       run: lein test
+    - name: Run Cloverage
+      run: lein cloverage --no-html --codecov
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
+      with:
+        directory: ./target/coverage/
+        verbose: true

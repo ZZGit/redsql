@@ -214,5 +214,5 @@ UPDATE user SET name = 'Kevin', email = 'Kevin@hc.com'  WHERE id = 1
 打印sql
 
 ```sql
-DELETE FROM t_user WHERE id = '1' 
+DELETE FROM user WHERE id = '1' 
 ```

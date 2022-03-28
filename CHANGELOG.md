@@ -20,8 +20,10 @@ All notable changes to this project will be documented in this file. This change
 - Files from the new template.
 - Widget maker public API - `make-widget-sync`.
 
-## 0.0.1
+## 0.1.3-SNAPSHOT
 ### Added
+- 添加`redsql.helper/convert-rows`方法,方便转换分页中rows数据
+- 添加`(:refer-clojure :exclude [set group-by])`, 防止启动警告
 
 [Unreleased]: https://github.com/your-name/red-db/compare/0.1.1...HEAD
 [0.1.1]: https://github.com/your-name/red-db/compare/0.1.0...0.1.1

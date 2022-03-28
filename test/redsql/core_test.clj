@@ -2,6 +2,7 @@
   (:require
    [next.jdbc :as jdbc]
    [redsql.core :as redsql]
+   [redsql.helper :as helper]
    [clojure.test :refer :all]
    [migratus.core :as migratus]
    [next.jdbc.result-set :as rs]
@@ -186,6 +187,11 @@
                (= size 5)
                (= total-count 12)
                (= total-page 3))))
+    (let [page-result (redsql/get-page sqlmap)
+          result (helper/convert-rows
+                  page-result
+                  (fn [row] "1"))]
+      (is (:rows result) '("1" "1" "1" "1" "1")))
     (let [{:keys [rows page size total-count total-page]} (redsql/get-page (with-meta sqlmap logic-delete-opt))]
       (is (and (= (count rows) 5)
                (= page 0)

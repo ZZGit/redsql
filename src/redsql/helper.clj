@@ -1,4 +1,5 @@
 (ns redsql.helper
+  (:refer-clojure :exclude [set group-by])
   (:require
    [honey.sql :as sql]
    [honey.sql.helpers :as helpers]))
@@ -128,3 +129,8 @@
   "降序排序"
   [sqlmap & args]
   (apply helpers/order-by (into [sqlmap] (to-desc-vals args))))
+
+(defn convert-rows
+  "convert page data rows"
+  [page-data convert-fn]
+  (update page-data :rows #(map convert-fn %)))

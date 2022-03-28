@@ -1,4 +1,4 @@
-(defproject org.clojars.redcreation/redsql "0.1.2-SNAPSHOT"
+(defproject org.clojars.redcreation/redsql "0.1.3-SNAPSHOT"
   :description "红创数据库操作"
   :url "http://example.com/FIXME"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"

@@ -126,8 +126,8 @@ honeysql是通过clojure的map的数据结构来表示sql,简称sqlmap.下面总
 ## 更新
 ```clojure
 {:update :t_user
-:set {:name "tom2"},
-:where [:= :id 1]}
+ :set {:name "tom2"},
+ :where [:= :id 1]}
 
 ;;等价 UPDATE t_user SET name='tom2' WHERE id=1
 ```
@@ -135,7 +135,7 @@ honeysql是通过clojure的map的数据结构来表示sql,简称sqlmap.下面总
 ## 删除
 ```clojure
 {:delete-from [:t_user]
-:where [:= :name "tom"]}
+ :where [:= :name "tom"]}
 
 ;;等价 DELETE FROM t_user WHERE name='tom'
 ```

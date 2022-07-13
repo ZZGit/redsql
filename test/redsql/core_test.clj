@@ -192,7 +192,8 @@
                   page-result
                   (fn [row] "1"))]
       (is (:rows result) '("1" "1" "1" "1" "1")))
-    (let [{:keys [rows page size total-count total-page]} (redsql/get-page (with-meta sqlmap logic-delete-opt))]
+    (let [{:keys [rows page size total-count total-page] :as result} (redsql/get-page (with-meta sqlmap logic-delete-opt))]
+      (prn result)
       (is (and (= (count rows) 5)
                (= page 0)
                (= total-count 10)

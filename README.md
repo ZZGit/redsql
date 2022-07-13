@@ -26,9 +26,9 @@ honeysql只负责将clojure的map结构(称为sqlmap),格式化成sql.比如:
 
 ## [常用sqlmap总结](./doc/sqlmap-summary.md)
 
-## [使用helper函数构造sqlmap](./doc/use-helper-build-sqlmap.md)
+## [CURD接口](./doc/curd-api.md)
 
-## CURD接口
+## [使用helper函数构造sqlmap](./doc/use-helper-build-sqlmap.md)
 
 ## 配置
 

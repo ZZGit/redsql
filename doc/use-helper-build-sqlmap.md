@@ -1,6 +1,6 @@
 # 使用helper函数构造sqlmap
 
-除了直接创建sqlmap外,[honeysql](https://github.com/seancorfield/honeysql)还提供了许多helper函数,来辅助构造sqlmap
+除了直接创建sqlmap外,[honeysql](https://github.com/seancorfield/honeysql)还提供了许多[helper](https://cljdoc.org/d/com.github.seancorfield/honeysql/2.2.891/api/honey.sql.helpers)函数,来辅助构造sqlmap
 
 ```clojure
 (require '[honey.sql.helpers :as helpers])
@@ -24,27 +24,41 @@
 ;;=> {:select [:a :b :c] :from [:foo] :where [:like :a "%baz%"]}
 ```
 
-不仅如此,redsql提供的helper函数,可以更优雅的动态构造查询条件.举个例子:
+不仅如此,redsql提供的helper函数,可以更优雅处理动态构造查询条件.
 
-
+比如，根据某个变量的值动态创建查询条件，是我们经常能遇到的场景。通常会判断变量值，手动构造sqlmap的查询条件
 
 ```clojure
 (def name "tom")
 (def age 10)
 
-(def valid-name? (clojure.string/blank? name))
-(def valid-age? (pos? age))
+(def where-vec [(when (clojure.string/blank? name) [:= :name name])
+                (when (pos? age) [:= :age age])])
+
+(def sqlmap {:select [:*]
+             :from [:t_user]
+             :where where-vec})
+
+```
+
+而redsql提供的helper函数，第一个参数可以传入一个布尔类型的值，为true则最为查询条件，反之不查询。免去了手动构造的麻烦
+
+```clojure
+(def name "tom")
+(def age 10)
 
 (-> (hs/select :*)
     (hs/from :user)
     (hs/where
-        (hs/eq valid-name? :name name)
-        (hs/eq valid-age? :age age)))
+        (hs/eq (clojure.string/blank? name) :name name)
+        (hs/eq (pos? age) :age age)))
 ```
 
 下面罗列了redsql新增的helper函数
 
 ## eq
+
+等于
 
 ```clojure
 (require '[redsql.helpers :as hs])
@@ -54,4 +68,138 @@
     (hs/where (hs/eq :name "tom")))
 
 ;;等价 {:select [:*] :from [:user] :where [:= :name "tom"]}
+```
+
+eq函数也能应用在以"simple"命名的api中
+
+```clojure
+(require '[redsql.helpers :as hs])
+(require '[redsql.core :as redsql])
+
+(redsql/get-simple-list :t_user {:name (hs/eq "tom")
+```
+
+## ne
+
+不等于
+
+```clojure
+(require '[redsql.helpers :as hs])
+
+(-> (hs/select :*)
+    (hs/from :user)
+    (hs/where (hs/ne :name "tom")))
+
+;;等价 {:select [:*] :from [:user] :where [:<> :name "tom"]}
+```
+
+ne函数也能应用在以"simple"命名的api中
+
+```clojure
+(require '[redsql.helpers :as hs])
+(require '[redsql.core :as redsql])
+
+(redsql/get-simple-list :t_user {:name (hs/ne "tom")
+```
+
+## gt
+
+大于
+
+```clojure
+(require '[redsql.helpers :as hs])
+
+(-> (hs/select :*)
+    (hs/from :user)
+    (hs/where (hs/gt :age 20)))
+
+;;等价 {:select [:*] :from [:user] :where [:> :age 20]}
+```
+
+gt函数也能应用在以"simple"命名的api中
+
+```clojure
+(require '[redsql.helpers :as hs])
+(require '[redsql.core :as redsql])
+
+(redsql/get-simple-list :t_user {:age (hs/gt 20)
+```
+
+## ge
+
+大于等于
+
+用法参考[gt](## gt)
+
+## lt
+
+小于
+
+用法参考[gt](## gt)
+
+## le
+
+小于等于
+
+用法参考[gt](## gt)
+
+## like
+
+like查询，会自动给要查询的字符串开头和结尾拼上`%`
+
+```clojure
+(require '[redsql.helpers :as hs])
+
+(-> (hs/select :*)
+    (hs/from :user)
+    (hs/where (hs/like :name “tom”)))
+
+;;等价 {:select [:*] :from [:user] :where [:like :name "%tom%"]}
+```
+
+like函数也能应用在以"simple"命名的api中
+
+```clojure
+(require '[redsql.helpers :as hs])
+(require '[redsql.core :as redsql])
+
+(redsql/get-simple-list :t_user {:name (hs/like "tom")
+```
+
+## like-left
+like查询, 会自动给要查询的字符串开头拼上`%`
+
+用法参考[like](## like-left)
+
+## like-right
+like查询, 会自动给要查询的字符串结尾拼上`%`
+
+用法参考[like](## like-left)
+
+## is-null
+
+值为null
+
+```clojure
+(require '[redsql.helpers :as hs])
+
+(-> (hs/select :*)
+    (hs/from :user)
+    (hs/where (hs/is-null :name)))
+
+;;等价 {:select [:*] :from [:user] :where [:= :name nil]}
+```
+
+## is-not-null
+
+值不为null
+
+```clojure
+(require '[redsql.helpers :as hs])
+
+(-> (hs/select :*)
+    (hs/from :user)
+    (hs/where (hs/is-not-null :name)))
+
+;;等价 {:select [:*] :from [:user] :where [:not= :name nil]}
 ```

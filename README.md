@@ -30,7 +30,7 @@ honeysql只负责将clojure的map结构(称为sqlmap),格式化成sql.比如:
 
 ## [使用helper函数构造sqlmap](./doc/use-helper-build-sqlmap.md)
 
-## 配置
+## [配置](./doc/config.md)
 
 ## 扩展
 

@@ -26,7 +26,8 @@
 
 ;; 数据源配置
 (def db-spec
-  {:jdbcUrl     "jdbc:h2:./demo"})
+  {:classname "com.p6spy.engine.spy.P6SpyDriver"
+   :jdbcUrl "jdbc:h2:./demo"})
 
 (redsql/connect! db-spec)
 ```

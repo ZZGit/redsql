@@ -20,7 +20,35 @@ honeysql只负责将clojure的map结构(称为sqlmap),格式化成sql.比如:
 => ["SELECT a, b, c FROM foo WHERE foo.a = ?" "baz"]
 ```
 
-而redsql借助next-jdbc,对外提供CURD接口,负责执行sqlmap.除此之外,还提供了多数据源,逻辑删除,字段自动填充等功能.
+而redsql借助next-jdbc,对外提供CURD接口,负责执行sqlmap.
+
+
+```clojure
+(require '[redsql.core :as redsql])
+
+;; 数据源配置
+(def db-spec
+  {:jdbcUrl "jdbc:h2:./demo"})
+
+;; 连接
+(redsql/connect! db-spec)
+
+;; 查询
+(def sqlmap {:select [:id :name]
+             :from   [:user]
+             :where  [:= :name "tom"]})
+(redsql/get-one sqlmap)
+
+;; 关闭连接
+(redsql/disconnect! db-spec)
+```
+返回结果
+
+```clojure
+{:id "1" :name "tom"}
+```
+
+除此之外,还提供了多数据源,逻辑删除,字段自动填充等功能.
 
 ## [快速开始](./doc/getting-started.md)
 
@@ -34,8 +62,8 @@ honeysql只负责将clojure的map结构(称为sqlmap),格式化成sql.比如:
 
 ## 扩展
 
-### 多数据源
+### [多数据源](./doc/multi-datasource.md)
 
-### 逻辑删除
+### [逻辑删除](./doc/logic-delete.md)
 
-### 字段自动填充
+### [字段自动填充](./doc/fill-filed.md)

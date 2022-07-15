@@ -147,7 +147,7 @@ get-page接收sqlmap作为参数,返回查询的记录和分页数据
 
 ```
 
-分页查询直接使用sqlmap会有点麻烦,offset的值需要根据当前页码和数量计算出来,而使用`pagination`来构造sqlmap会省去这个麻烦,它会根据传入的参数,自动计算`:offset`的值
+分页查询直接使用sqlmap会有点麻烦,offset的值需要根据当前页码和数量计算出来,而使用[pagination](use-helper-build-sqlmap.md#pagination)来构造sqlmap会省去这个麻烦,它会根据传入的参数,自动计算`:offset`的值
 
 ```clojure
 (require '[redsql.helpers :as hs])
@@ -187,7 +187,7 @@ get-page接收sqlmap作为参数,返回查询的记录和分页数据
 | total-page  | 总页码数           |
 
 
-## get-simple-list
+## <a id="get-simple-list">get-simple-list<a>
 
 当查询单表,而且条件只有and组合,我们可以使用`get-simple-list`来替代`get-list`
 
@@ -223,16 +223,16 @@ get-page接收sqlmap作为参数,返回查询的记录和分页数据
 
 当查询单表,而且条件只有and组合,我们可以使用`get-simple-one`来替代`get-one`
 
-用法可以参考[get-simple-list](## get-simple-list)
+用法可以参考[get-simple-list](#get-simple-list)
 
 ## get-simple-count
 
 当查询单表,而且条件只有and组合,我们可以使用`get-simple-count`来替代`get-count`
 
-用法可以参考[get-simple-list](## get-simple-list)
+用法可以参考[get-simple-list](#get-simple-list)
 
 ## simple-delete!
 
 当删除单表,而且条件只有and组合,我们可以使用`simple-delete!`来替代`delete!`
 
-用法可以参考[get-simple-list](## get-simple-list)
+用法可以参考[get-simple-list](#get-simple-list)

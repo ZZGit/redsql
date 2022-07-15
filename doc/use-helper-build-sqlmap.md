@@ -56,7 +56,7 @@
 
 下面罗列了redsql新增的helper函数
 
-## eq
+## <a id="eq">eq</a>
 
 等于
 
@@ -83,26 +83,9 @@ eq函数也能应用在以"simple"命名的api中
 
 不等于
 
-```clojure
-(require '[redsql.helpers :as hs])
+用法参考[eq](#eq)
 
-(-> (hs/select :*)
-    (hs/from :user)
-    (hs/where (hs/ne :name "tom")))
-
-;;等价 {:select [:*] :from [:user] :where [:<> :name "tom"]}
-```
-
-ne函数也能应用在以"simple"命名的api中
-
-```clojure
-(require '[redsql.helpers :as hs])
-(require '[redsql.core :as redsql])
-
-(redsql/get-simple-list :t_user {:name (hs/ne "tom")
-```
-
-## gt
+## <a id="gt">gt</a>
 
 大于
 
@@ -129,21 +112,21 @@ gt函数也能应用在以"simple"命名的api中
 
 大于等于
 
-用法参考[gt](## gt)
+用法参考[gt](#gt)
 
 ## lt
 
 小于
 
-用法参考[gt](## gt)
+用法参考[gt](#gt)
 
 ## le
 
 小于等于
 
-用法参考[gt](## gt)
+用法参考[gt](#gt)
 
-## like
+## <a id="like">like</a>
 
 like查询，会自动给要查询的字符串开头和结尾拼上`%`
 
@@ -169,12 +152,26 @@ like函数也能应用在以"simple"命名的api中
 ## like-left
 like查询, 会自动给要查询的字符串开头拼上`%`
 
-用法参考[like](## like-left)
+用法参考[like](#like)
 
 ## like-right
 like查询, 会自动给要查询的字符串结尾拼上`%`
 
-用法参考[like](## like-left)
+用法参考[like](#like)
+
+## <a id="pagination">pagination</a>
+分页查询，自动计算`:offset`,`:limit`的值
+
+```clojure
+(def sqlmap {:select [:*]
+             :from [:user]})
+
+(pagination sqlmap 0 10)
+;;=> {:select [:*] :from [:user] :offset 0 :limit 10}
+
+(pagination sqlmap 1 10)
+;;=> {:select [:*] :from [:user] :offset 10 :limit 10}
+```
 
 ## is-null
 

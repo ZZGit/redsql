@@ -56,11 +56,11 @@ honeysql只负责将clojure的map结构(称为sqlmap),格式化成sql.比如:
 
 ## [CURD接口](./doc/curd-api.md)
 
+## [事务操作](./doc/with-transaction.md)
+
 ## [使用helper函数构造sqlmap](./doc/use-helper-build-sqlmap.md)
 
 ## [配置](./doc/config.md)
-
-## 扩展
 
 ### [多数据源](./doc/multi-datasource.md)
 

@@ -17,6 +17,7 @@
   (or *tds* (get @datasource ns-key)))
 
 (defn get-ns-ds [ns-key]
+  (prn "SSS" ns-key @datasource)
   (get @datasource ns-key))
 
 (defn connect! [ns-key db-spec]

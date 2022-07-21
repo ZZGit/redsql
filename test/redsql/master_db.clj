@@ -1,8 +1,5 @@
 (ns redsql.master-db
   (:require
-   [redsql.api :refer [def-api def-transaction]]))
+   [redsql.api :refer [def-api]]))
 
 (def-api)
-
-(defmacro with-transaction [& args]
-  (def-transaction :redsql.master-db args))

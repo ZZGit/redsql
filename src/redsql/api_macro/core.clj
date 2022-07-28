@@ -2,60 +2,8 @@
   (:require
    [redsql.config :as config]
    [redsql.connection :as connection]
-   [redsql.api-macro.core-api-fn :as core-api]
-   [redsql.api-macro.simple-api-fn :as simple-api]))
-
-(def ^:private core-api-funs
-  [{:id "insert!"
-    :meta {:doc "insert one record into table"}
-    :fn (fn [ns conn params]
-          (core-api/insert! ns conn params))}
-   {:id "insert-multi!"
-    :meta {:doc "insert multiple record into table"}
-    :fn (fn [ns conn params]
-          (core-api/insert-multi! ns conn params))}
-   {:id "update!"
-    :meta {:doc "update table"}
-    :fn (fn [ns conn params]
-          (core-api/update! ns conn params))}
-   {:id "delete!"
-    :meta {:doc "delete!"}
-    :fn (fn [ns conn params]
-          (core-api/delete! ns conn params))}
-   {:id "get-one"
-    :meta {:doc "query one record"}
-    :fn (fn [ns conn params]
-          (core-api/get-one ns conn params))}
-   {:id "get-list"
-    :meta {:doc "query records"}
-    :fn (fn [ns conn params]
-          (core-api/get-list ns conn params))}
-   {:id "get-count"
-    :meta {:doc "query count"}
-    :fn (fn [ns conn params]
-          (core-api/get-count ns conn params))}
-   {:id "get-page"
-    :meta {:doc "query page"}
-    :fn (fn [ns conn params]
-          (core-api/get-page ns conn params))}])
-
-(def ^:private simple-api-funs
-  [{:id "get-simple-one"
-    :meta {:doc ""}
-    :fn (fn [ns conn table params opt]
-          (simple-api/get-simple-one ns conn table params opt))}
-   {:id "get-simple-list"
-    :meta {:doc ""}
-    :fn (fn [ns conn table params opt]
-          (simple-api/get-simple-list ns conn table params opt))}
-   {:id "get-simple-count"
-    :meta {:doc ""}
-    :fn (fn [ns conn table params opt]
-          (simple-api/get-simple-count ns conn table params opt))}
-   {:id "simple-delete!"
-    :meta {:doc "simple-delete!"}
-    :fn (fn [ns conn table params opt]
-          (simple-api/simple-delete! ns conn table params opt))}])
+   [redsql.api-macro.core-api-fn]
+   [redsql.api-macro.simple-api-fn]))
 
 (def ^:private one-arg-api
   [{:id "connect!"
@@ -77,27 +25,55 @@
     :fn (fn [ns]
           (config/clear-ds-config ns))}])
 
-(defn intern-fn [ns id meta f]
-  (intern ns (with-meta (symbol (name id)) meta) f))
+(defn- get-pulic-funs-metadata
+  "获取namespace下的所有访问权限为public的函数的元数据和函数引用
+   举例: (get-pulic-funs-metadata 'redsql.api-macro.core-api-fn)
+   返回结果: [
+                [{:arglists ([ns conn sqlmap]),
+                  :name get-list,
+                  :doc \"get-list\"}
+                #'redsql.api-macro.core-api-fn/get-list]
 
+                [{:arglists ([ns conn sqlmap]),
+                  :name get-one,
+                  :doc \"get-one\"}
+                 #'redsql.api-macro.core-api-fn/get-one]
+              ]
+  "
+  [ns]
+  (map
+   (fn [[_ v]]
+     (let [metadata (select-keys (meta v) [:arglists :doc :name])]
+       [metadata v]))
+   (ns-publics ns)))
+
+(defn intern-fn
+  [ns fname meta f]
+  (let [meta-name (with-meta (symbol (name fname)) meta)]
+    (intern ns meta-name f)))
+x
 (defn def-core-api-funs [ns]
-  `(doseq [{id# :id meta# :meta fn# :fn} ~core-api-funs]
-     (intern-fn
-      *ns* id# meta#
-      (fn f#
-        ([params#]
-         (fn# ~ns nil params#))
-        ([conn# params#] (fn# ~ns conn# params#))))))
+  (let [core-api-ns 'redsql.api-macro.core-api-fn
+        fsm (get-pulic-funs-metadata core-api-ns)]
+    (doseq [[meta f] fsm]
+      (intern-fn
+       *ns* (:name meta) meta
+       (fn
+         ([params]
+          (f ns nil params))
+         ([conn params] (f ns conn params)))))))
 
 (defn def-simple-api-funs [ns]
-  `(doseq [{id# :id meta# :meta fn# :fn} ~simple-api-funs]
-     (intern-fn
-      *ns* id# meta#
-      (fn f#
-        ([table#] (fn# ~ns nil table# nil nil))
-        ([table# params#] (fn# ~ns nil table# params# nil))
-        ([table# params# opt#] (fn# ~ns nil table# params# opt#))
-        ([conn# table# params# opt#] (fn# ~ns conn# table# params# opt#))))))
+  (let [simple-api-ns 'redsql.api-macro.simple-api-fn
+        fsm (get-pulic-funs-metadata simple-api-ns)]
+    (doseq [[meta f] fsm]
+      (intern-fn
+       *ns* (:name meta) meta
+       (fn
+         ([table] (f ns nil table nil nil))
+         ([table params] (f ns nil table params nil))
+         ([table params opt] (f ns nil table params opt))
+         ([conn table params opt] (f ns conn table params opt)))))))
 
 (defn def-other-api-funs [ns]
   `(do

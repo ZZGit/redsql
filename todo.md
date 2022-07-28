@@ -1,4 +1,5 @@
-- [] 在`redsql.api-macro.core`中自动生成`core-api-funs`的数据结构
-- [] 在`redsql.api-macro.core-api-fn`中，解耦`(or conn (connection/get-ds ns))`的逻辑,这个逻辑应该放在`redsql.api-macro.core`中，这样`redsql.api-macro.core-api-fn`的函数就非常纯粹，单一职责原则
-- [] 在`redsql.connection`中的`(def ^:dynamic *tds* nil)`,得考虑多线程的问题
-- [] 事务用法的文档，事务配置项参数
+- [x] 在`redsql.api-macro.core`中自动生成`core-api-funs`的数据结构
+- [ ] 创建一个新的dev分支，平时提交在dev分支上，main分支负责发版，每次提交到main分支上自动发版
+- [ ] 在`redsql.api-macro.core-api-fn`中，解耦`(or conn (connection/get-ds ns))`的逻辑,这个逻辑应该放在`redsql.api-macro.core`中，这样`redsql.api-macro.core-api-fn`的函数就非常纯粹，单一职责原则
+- [ ] 在`redsql.connection`中的`(def ^:dynamic *tds* nil)`,得考虑多线程的问题
+- [ ] 事务用法的文档，事务配置项参数

@@ -51,7 +51,7 @@
   [ns fname meta f]
   (let [meta-name (with-meta (symbol (name fname)) meta)]
     (intern ns meta-name f)))
-x
+
 (defn def-core-api-funs [ns]
   (let [core-api-ns 'redsql.api-macro.core-api-fn
         fsm (get-pulic-funs-metadata core-api-ns)]
